@@ -1,0 +1,27 @@
+{
+  "description": "A sample MCP server with weather and random number tools",
+  "name": "io.github.sanamhub/mcp-nuget",
+  "packages": [
+    {
+      "registry_name": "nuget",
+      "name": "sanam.mcp",
+      "version": "0.0.1-preview",
+      "package_arguments": [],
+      "environment_variables": [
+        {
+          "name": "WEATHER_CHOICES",
+          "description": "Comma separated list of weather descriptions",
+          "is_required": true,
+          "is_secret": false
+        }
+      ]
+    }
+  ],
+  "repository": {
+    "url": "https://github.com/sanamhub/mcp-nuget",
+    "source": "github"
+  },
+  "version_detail": {
+    "version": "0.0.1-preview"
+  }
+}
