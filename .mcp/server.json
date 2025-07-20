@@ -1,17 +1,17 @@
 {
-  "description": "A sample MCP server with weather and random number tools",
+  "description": "A Model Context Protocol (MCP) server that provides weather information tools for AI assistants",
   "name": "io.github.sanamhub/mcp-nuget",
   "packages": [
     {
       "registry_name": "nuget",
-      "name": "sanam.mcp",
-      "version": "0.0.1-preview",
+      "name": "mcp",
+      "version": "0.0.1",
       "package_arguments": [],
       "environment_variables": [
         {
           "name": "WEATHER_CHOICES",
           "description": "Comma separated list of weather descriptions",
-          "is_required": true,
+          "is_required": false,
           "is_secret": false
         }
       ]
@@ -22,6 +22,6 @@
     "source": "github"
   },
   "version_detail": {
-    "version": "0.0.1-preview"
+    "version": "0.0.1"
   }
 }

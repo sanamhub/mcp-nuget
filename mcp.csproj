@@ -14,9 +14,15 @@
     <!-- Set recommended package metadata -->
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageId>mcp</PackageId>
-    <PackageVersion>0.0.1-preview</PackageVersion>
-    <PackageTags>AI;MCP;server;stdio</PackageTags>
-    <Description>An MCP server using the MCP C# SDK.</Description>
+    <PackageVersion>0.0.1</PackageVersion>
+    <PackageTags>AI;MCP;server;stdio;weather;tools</PackageTags>
+    <Description>A Model Context Protocol (MCP) server that provides weather information tools for AI assistants.</Description>
+    <Authors>sanamhub</Authors>
+    <Company>sanamhub</Company>
+    <PackageProjectUrl>https://github.com/sanamhub/mcp-nuget</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/sanamhub/mcp-nuget</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <!-- Include additional files for browsing the MCP server. -->

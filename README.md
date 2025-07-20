@@ -1,125 +1,196 @@
-# MCP Server
+# MCP Weather Server
 
-This README was created using the C# MCP server project template. It demonstrates how you can easily create an MCP server using C# and publish it as a NuGet package.
+A Model Context Protocol (MCP) server to try NuGet MCP support that provides weather information tools for AI assistants. This server is built using C# and the official ModelContextProtocol SDK.
 
-See [aka.ms/nuget/mcp/guide](https://aka.ms/nuget/mcp/guide) for the full guide.
+## Overview
 
-Please note that this template is currently in an early preview stage. If you have feedback, please take a [brief survey](http://aka.ms/dotnet-mcp-template-survey).
+This MCP server exposes weather-related tools that can be used by AI assistants like Claude, GitHub Copilot, and other MCP-compatible clients. The server provides random weather information for cities based on configurable weather conditions.
 
-## Checklist before publishing to NuGet.org
+## Features
 
-- Test the MCP server locally using the steps below.
-- Update the package metadata in the .csproj file, in particular the `<PackageId>`.
-- Update `.mcp/server.json` to declare your MCP server's inputs.
-  - See [configuring inputs](https://aka.ms/nuget/mcp/guide/configuring-inputs) for more details.
+- **Weather Information Tool**: Get random weather descriptions for any city
+- **Configurable Weather Options**: Customize available weather conditions via environment variables
+- **Cross-Platform**: Built on .NET 9.0 with cross-platform support
+- **Easy Integration**: Works with VS Code, Visual Studio, and other MCP-compatible environments
 
-```json
-{
-  "description": "A sample MCP server with weather",
-  "name": "io.github.sanamhub/mcp-nuget",
-  "packages": [
-    {
-      "registry_name": "nuget",
-      "name": "sanam.mcp",
-      "version": "0.0.1-preview",
-      "package_arguments": [],
-      "environment_variables": [
-        {
-          "name": "WEATHER_CHOICES",
-          "description": "Comma separated list of weather descriptions",
-          "is_required": true,
-          "is_secret": false
-        }
-      ]
-    }
-  ],
-  "repository": {
-    "url": "https://github.com/sanamhub/mcp-nuget",
-    "source": "github"
-  },
-  "version_detail": {
-    "version": "0.0.1-preview"
-  }
-}
+## Installation
+
+### From NuGet (Recommended)
+
+The server is available as a NuGet package at [nuget.org/packages/mcp](https://www.nuget.org/packages/mcp).
+
+#### Global Installation
+
+```bash
+dotnet tool install --global mcp
 ```
 
-- Pack the project using `dotnet pack`.
+#### Local Installation
 
-The `bin/Release` directory will contain the package file (.nupkg), which can be [published to NuGet.org](https://learn.microsoft.com/nuget/nuget-org/publish-a-package).
+```bash
+dotnet new tool-manifest  # if you are setting up this repo
+dotnet tool install --local mcp
+```
 
-## Developing locally
+### From Source
 
-To test this MCP server from source code (locally) without using a built MCP server package, you can configure your IDE to run the project directly using `dotnet run`.
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/sanamhub/mcp-nuget.git
+   cd mcp-nuget
+   ```
+
+2. Build and run:
+
+   ```bash
+   dotnet build
+   dotnet run
+   ```
+
+## Configuration
+
+### VS Code Setup
+
+Create a `.vscode/mcp.json` file in your workspace:
 
 ```json
 {
   "servers": {
-    "mcp-nuget": {
+    "mcp-weather": {
+      "type": "stdio",
+      "command": "dnx",
+      "args": ["mcp@0.0.1", "--yes"],
+      "env": {
+        "WEATHER_CHOICES": "sunny,cloudy,rainy,snowy,stormy"
+      }
+    }
+  }
+}
+```
+
+### Visual Studio Setup
+
+Create a `.mcp.json` file in your solution directory:
+
+```json
+{
+  "servers": {
+    "mcp-weather": {
+      "type": "stdio",
+      "command": "dnx",
+      "args": ["mcp@0.0.1", "--yes"],
+      "env": {
+        "WEATHER_CHOICES": "sunny,cloudy,rainy,snowy,stormy"
+      }
+    }
+  }
+}
+```
+
+### Local Development Setup
+
+For testing from source code:
+
+```json
+{
+  "servers": {
+    "mcp-weather": {
       "type": "stdio",
       "command": "dotnet",
       "args": ["run", "--project", "."],
       "env": {
-        "WEATHER_CHOICES": "sunny,humid,freezing,perfect"
+        "WEATHER_CHOICES": "sunny,humid,freezing,perfect,stormy"
       }
     }
   }
 }
 ```
 
-## Testing the MCP Server
+## Environment Variables
 
-Once configured, you can ask Copilot Chat for a random number, for example, `Give me 3 random numbers`. It should prompt you to use the `get_random_number` tool on the `mcp` MCP server and show you the results.
+| Variable          | Description                                  | Required | Default              |
+| ----------------- | -------------------------------------------- | -------- | -------------------- |
+| `WEATHER_CHOICES` | Comma-separated list of weather descriptions | No       | "balmy,rainy,stormy" |
 
-## Publishing to NuGet.org
+## Available Tools
 
-1. Run `dotnet pack -c Release` to create the NuGet package
-2. Publish to NuGet.org with `dotnet nuget push bin/Release/*.nupkg --api-key <your-api-key> --source https://api.nuget.org/v3/index.json`
+### `get_city_weather`
 
-## Using the MCP Server from NuGet.org
+Returns random weather information for a specified city.
 
-Once the MCP server package is published to NuGet.org, you can configure it in your preferred IDE. Both VS Code and Visual Studio use the `dnx` command to download and install the MCP server package from NuGet.org.
+**Parameters:**
 
-- **VS Code**: Create a `<WORKSPACE DIRECTORY>/.vscode/mcp.json` file
-- **Visual Studio**: Create a `<SOLUTION DIRECTORY>\.mcp.json` file
+- `city` (string): Name of the city to get weather for
 
-For both VS Code and Visual Studio, the configuration file uses the following server definition:
+**Example:**
 
-```json
-{
-  "servers": {
-    "mcp": {
-      "type": "stdio",
-      "command": "dnx",
-      "args": ["mcp@0.0.1-preview", "--yes"],
-      "env": {
-        "WEATHER_CHOICES": "sunny,humid,freezing,perfect"
-      }
-    }
-  }
-}
+```text
+User: What's the weather like in New York?
+Assistant: The weather in New York is sunny.
 ```
 
-## More information
+## Development
 
-.NET MCP servers use the [ModelContextProtocol](https://www.nuget.org/packages/ModelContextProtocol) C# SDK. For more information about MCP:
+### Prerequisites
 
-- [Official Documentation](https://modelcontextprotocol.io/)
-- [Protocol Specification](https://spec.modelcontextprotocol.io/)
-- [GitHub Organization](https://github.com/modelcontextprotocol)
+- .NET 9.0 SDK or later
+- Visual Studio 2022 or VS Code
 
-Refer to the VS Code or Visual Studio documentation for more information on configuring and using MCP servers:
+### Building
 
-- [Use MCP servers in VS Code (Preview)](https://code.visualstudio.com/docs/copilot/chat/mcp-servers)
-- [Use MCP servers in Visual Studio (Preview)](https://learn.microsoft.com/visualstudio/ide/mcp-servers)
-
-### Pack for Nuget
-
-```sh
-dotnet pack mcp.csproj -c Release
+```bash
+dotnet build
 ```
 
-### Publish to NuGet
+### Testing
 
-```sh
-dotnet nuget push bin/Release/*.nupkg --api-key <your-api-key> --source https://api.nuget.org/v3/index.json
+```bash
+dotnet test
 ```
+
+### Packaging
+
+```bash
+dotnet pack -c Release
+```
+
+The package will be created in `bin/Release/mcp.{version}.nupkg`.
+
+## Publishing
+
+To publish a new version to NuGet:
+
+1. Update the version in `mcp.csproj`
+2. Update the version in `.mcp/server.json`
+3. Build and pack:
+
+   ```bash
+   dotnet pack -c Release
+   ```
+
+4. Publish:
+
+   ```bash
+   dotnet nuget push bin/Release/*.nupkg --api-key <your-api-key> --source https://api.nuget.org/v3/index.json
+   ```
+
+## Dependencies
+
+- [ModelContextProtocol](https://www.nuget.org/packages/ModelContextProtocol) - Official MCP C# SDK
+- [Microsoft.Extensions.Hosting](https://www.nuget.org/packages/Microsoft.Extensions.Hosting) - .NET hosting infrastructure
+
+## Resources
+
+- [Model Context Protocol Documentation](https://modelcontextprotocol.io/)
+- [MCP Protocol Specification](https://spec.modelcontextprotocol.io/)
+- [VS Code MCP Integration](https://code.visualstudio.com/docs/copilot/chat/mcp-servers)
+- [Visual Studio MCP Integration](https://learn.microsoft.com/visualstudio/ide/mcp-servers)
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
